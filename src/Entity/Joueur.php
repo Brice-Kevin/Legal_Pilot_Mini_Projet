@@ -33,11 +33,6 @@ class Joueur
     private $position;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
-    private $current_club;
-
-    /**
      * @ORM\Column(type="string", length=100)
      */
     private $nationality;
@@ -45,32 +40,17 @@ class Joueur
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $appearances_home;
+    private $appearances;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $appearances_away;
+    private $goals;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $goals_home;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $goals_away;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $assists_home;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $assists_away;
+    private $assists;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -81,11 +61,6 @@ class Joueur
      * @ORM\Column(type="datetime_immutable")
      */
     private $updatedAt;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $equipe_id;
 
     public function getId(): ?int
     {
@@ -128,18 +103,6 @@ class Joueur
         return $this;
     }
 
-    public function getCurrentClub(): ?string
-    {
-        return $this->current_club;
-    }
-
-    public function setCurrentClub(?string $current_club): self
-    {
-        $this->current_club = $current_club;
-
-        return $this;
-    }
-
     public function getNationality(): ?string
     {
         return $this->nationality;
@@ -152,74 +115,38 @@ class Joueur
         return $this;
     }
 
-    public function getAppearancesHome(): ?int
+    public function getAppearances(): ?int
     {
-        return $this->appearances_home;
+        return $this->appearances;
     }
 
-    public function setAppearancesHome(?int $appearances_home): self
+    public function setAppearances(?int $appearances): self
     {
-        $this->appearances_home = $appearances_home;
+        $this->appearances = $appearances;
 
         return $this;
     }
 
-    public function getAppearancesAway(): ?int
+    public function getGoals(): ?int
     {
-        return $this->appearances_away;
+        return $this->goals;
     }
 
-    public function setAppearancesAway(?int $appearances_away): self
+    public function setGoals(?int $goals): self
     {
-        $this->appearances_away = $appearances_away;
+        $this->goals = $goals;
 
         return $this;
     }
 
-    public function getGoalsHome(): ?int
+    public function getAssists(): ?int
     {
-        return $this->goals_home;
+        return $this->assists;
     }
 
-    public function setGoalsHome(?int $goals_home): self
+    public function setAssists(?int $assists): self
     {
-        $this->goals_home = $goals_home;
-
-        return $this;
-    }
-
-    public function getGoalsAway(): ?int
-    {
-        return $this->goals_away;
-    }
-
-    public function setGoalsAway(?int $goals_away): self
-    {
-        $this->goals_away = $goals_away;
-
-        return $this;
-    }
-
-    public function getAssistsHome(): ?int
-    {
-        return $this->assists_home;
-    }
-
-    public function setAssistsHome(?int $assists_home): self
-    {
-        $this->assists_home = $assists_home;
-
-        return $this;
-    }
-
-    public function getAssistsAway(): ?int
-    {
-        return $this->assists_away;
-    }
-
-    public function setAssistsAway(?int $assists_away): self
-    {
-        $this->assists_away = $assists_away;
+        $this->assists = $assists;
 
         return $this;
     }
@@ -244,18 +171,6 @@ class Joueur
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getEquipeId(): ?int
-    {
-        return $this->equipe_id;
-    }
-
-    public function setEquipeId(int $equipe_id): self
-    {
-        $this->equipe_id = $equipe_id;
 
         return $this;
     }
