@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\JoueurRepository;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -39,18 +40,36 @@ class JoueurController extends AbstractController
     }
 
     /**
-     * @Route("/api/joueur/create", methods={"POST"})
+     * @Route("/api/joueur/create", methods={"GET"})
      */
     public function createJoueur(Request $request, ManagerRegistry $doctrine): Response {
         $em = $doctrine->getManager();
         $response = new Response();
-        $data = $request->request->all();
+        // $data = $request->request->all();
+        $data = $request->query->all();
 
         $joueur =  new Joueur();
         $joueur->setFullName($data["full_name"]);
         $joueur->setBirthday(new DateTime($data["birthday"]));
         $joueur->setPosition($data["position"]);
-        $joueur->setNationality($data["nationality"]);
+
+        $request_client = (array) json_decode(HttpClient::create()->request('GET', 'https://flagcdn.com/fr/codes.json')->getContent());
+        $test = 0;
+        foreach ($request_client as $key => $value) {
+            if ($value == $data["nationality"]) {
+                $joueur->setNationality("https://flagcdn.com/96x72/".$key.".png");
+                $test = 1;
+            }
+        }
+
+        if ($test == 0) {
+            return new JsonResponse([
+                "code" => 1,
+                "message" => "Pays inconnu.",
+                "resultat" => null
+            ], Response::HTTP_NOT_FOUND);
+        }
+        
         $em->persist($joueur);
         $em->flush();
 
@@ -62,13 +81,14 @@ class JoueurController extends AbstractController
     }
     
     /**
-     * @Route("/api/joueur/edit/{id}", methods={"POST"})
+     * @Route("/api/joueur/edit/{id}", methods={"GET"})
      */
     public function editJoueur(Request $request, int $id, ManagerRegistry $doctrine, JoueurRepository $joueurRepository): Response {
         $response = new Response();
         $em = $doctrine->getManager();
         $joueur = $joueurRepository->find($id);
-        $data = $request->request->all();
+        // $data = $request->request->all();
+        $data = $request->query->all();
         
         if(!$joueur){
             return new JsonResponse([
@@ -81,7 +101,27 @@ class JoueurController extends AbstractController
         $joueur->setFullName($data["full_name"]);
         $joueur->setBirthday(new DateTime($data["birthday"]));
         $joueur->setPosition($data["position"]);
-        $joueur->setNationality($data["nationality"]);
+        $joueur->setAppearances($data["appearances"]);
+        $joueur->setGoals($data["goals"]);
+        $joueur->setAssists($data["assists"]);
+
+        $request_client = (array) json_decode(HttpClient::create()->request('GET', 'https://flagcdn.com/fr/codes.json')->getContent());
+        $test = 0;
+        foreach ($request_client as $key => $value) {
+            if ($value == $data["nationality"]) {
+                $joueur->setNationality("https://flagcdn.com/96x72/".$key.".png");
+                $test = 1;
+            }
+        }
+
+        if ($test == 0) {
+            return new JsonResponse([
+                "code" => 1,
+                "message" => "Pays inconnu.",
+                "resultat" => null
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         $em->persist($joueur);
         $em->flush();
 
